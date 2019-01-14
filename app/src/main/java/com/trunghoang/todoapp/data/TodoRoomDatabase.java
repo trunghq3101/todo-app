@@ -5,6 +5,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 @Database(entities = {TodoUnit.class}, version = 1, exportSchema = false)
@@ -15,8 +16,9 @@ abstract class TodoRoomDatabase extends RoomDatabase {
 
     private static RoomDatabase.Callback sRoomCallback = new RoomDatabase.Callback() {
         @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {
-            super.onOpen(db);
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            new PopulateDBAsync(instance).execute();
         }
     };
 
@@ -32,5 +34,19 @@ abstract class TodoRoomDatabase extends RoomDatabase {
             }
         }
         return instance;
+    }
+
+    private static class PopulateDBAsync extends AsyncTask<Void, Void, Void> {
+        private TodoDao mTodoDao;
+
+        PopulateDBAsync(TodoRoomDatabase db) {
+            mTodoDao = db.todoDao();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mTodoDao.insert(new TodoUnit("This is a sample todo task"));
+            return null;
+        }
     }
 }
