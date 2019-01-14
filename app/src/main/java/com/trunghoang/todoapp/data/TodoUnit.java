@@ -15,12 +15,13 @@ public class TodoUnit {
     @ColumnInfo(name = "todo_text")
     private String mTodoText;
 
-    public TodoUnit(@NonNull String mTodoText) {
+    @Ignore
+    TodoUnit(@NonNull String mTodoText) {
         this.mTodoText = mTodoText;
     }
 
-    @Ignore
     public TodoUnit(int id, @NonNull String mTodoText) {
+        this.id = id;
         this.mTodoText = mTodoText;
     }
 

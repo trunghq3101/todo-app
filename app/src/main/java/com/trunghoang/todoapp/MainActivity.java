@@ -1,15 +1,27 @@
 package com.trunghoang.todoapp;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.trunghoang.todoapp.adapters.TodoAdapter;
+import com.trunghoang.todoapp.data.TodoUnit;
+import com.trunghoang.todoapp.viewmodels.TodoViewModel;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private TodoViewModel mTodoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +36,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        RecyclerView recyclerView = findViewById(R.id.main_task_recycler_view);
+        final TodoAdapter todoAdapter = new TodoAdapter(this);
+        recyclerView.setAdapter(todoAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mTodoViewModel = new TodoViewModel(this.getApplication());
+        mTodoViewModel.getAllTodos().observe(this, new Observer<List<TodoUnit>>() {
+            @Override
+            public void onChanged(@Nullable List<TodoUnit> todoUnits) {
+                todoAdapter.setAllTodos(todoUnits);
             }
         });
     }

@@ -8,7 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {TodoUnit.class}, version = 1, exportSchema = false)
+@Database(entities = {TodoUnit.class}, version = 2, exportSchema = false)
 abstract class TodoRoomDatabase extends RoomDatabase {
 
     abstract TodoDao todoDao();
@@ -29,6 +29,7 @@ abstract class TodoRoomDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context,
                             TodoRoomDatabase.class, "todo_database")
                             .fallbackToDestructiveMigration()
+                            .addCallback(sRoomCallback)
                             .build();
                 }
             }
