@@ -46,7 +46,9 @@ abstract class TodoRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mTodoDao.insert(new TodoUnit("This is a sample todo task"));
+            mTodoDao.insert(new TodoUnit.Builder()
+                    .setTodoText("This is a sample todo task")
+                    .build());
             return null;
         }
     }

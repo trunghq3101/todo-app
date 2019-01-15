@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_TODO_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             String todoContent = data.getStringExtra(EditorActivity.EXTRA_TODO_CONTENT);
-            mTodoViewModel.insert(new TodoUnit(todoContent));
+            mTodoViewModel.insert(new TodoUnit.Builder()
+                    .setTodoText(todoContent)
+                    .build());
         }
     }
 

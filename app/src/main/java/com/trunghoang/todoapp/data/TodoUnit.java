@@ -32,4 +32,20 @@ public class TodoUnit {
     public int getId() {
         return id;
     }
+
+    public static class Builder {
+        private int id;
+        private String mTodoText;
+
+        public Builder() {}
+
+        public Builder setTodoText(@NonNull String todoText) {
+            mTodoText = todoText;
+            return this;
+        }
+
+        public TodoUnit build() {
+            return new TodoUnit(mTodoText);
+        }
+    }
 }
