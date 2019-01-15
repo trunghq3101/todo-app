@@ -6,8 +6,10 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "todo_table")
-public class TodoUnit {
+public class TodoUnit implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -44,8 +46,13 @@ public class TodoUnit {
             return this;
         }
 
+        public Builder setTodoId(int id) {
+            this.id = id;
+            return this;
+        }
+
         public TodoUnit build() {
-            return new TodoUnit(mTodoText);
+            return new TodoUnit(id, mTodoText);
         }
     }
 }

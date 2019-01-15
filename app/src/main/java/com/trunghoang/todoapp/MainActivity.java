@@ -10,13 +10,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.trunghoang.todoapp.adapters.TodoAdapter;
+import com.trunghoang.todoapp.adapters.TodoClickListener;
 import com.trunghoang.todoapp.data.TodoUnit;
+import com.trunghoang.todoapp.utilities.Constants;
 import com.trunghoang.todoapp.viewmodels.TodoViewModel;
 
 import java.util.List;
@@ -24,7 +28,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_TODO_ACTIVITY_REQUEST_CODE = 1;
+    public static final int UPDATE_TODO_ACTIVITY_REQUEST_CODE = 2;
     private TodoViewModel mTodoViewModel;
+    private TodoAdapter mTodoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +43,17 @@ public class MainActivity extends AppCompatActivity {
         setActionOpenEditor(fab);
 
         RecyclerView recyclerView = findViewById(R.id.main_task_recycler_view);
-        final TodoAdapter todoAdapter = new TodoAdapter(this);
-        recyclerView.setAdapter(todoAdapter);
+        mTodoAdapter = new TodoAdapter(this);
+        recyclerView.setAdapter(mTodoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         attachItemTouchHelper(recyclerView);
+        attachItemTouchListener(recyclerView);
 
         mTodoViewModel = new TodoViewModel(this.getApplication());
         mTodoViewModel.getAllTodos().observe(this, new Observer<List<TodoUnit>>() {
             @Override
             public void onChanged(@Nullable List<TodoUnit> todoUnits) {
-                todoAdapter.setAllTodos(todoUnits);
+                mTodoAdapter.setAllTodos(todoUnits);
             }
         });
     }
@@ -82,14 +89,43 @@ public class MainActivity extends AppCompatActivity {
         helper.attachToRecyclerView(recyclerView);
     }
 
+    private void attachItemTouchListener(final RecyclerView recyclerView) {
+        recyclerView.addOnItemTouchListener(new TodoClickListener(this, new TodoClickListener.TodoClickListenerCallback() {
+            @Override
+            public void onSingleTapUp(MotionEvent e) {
+                View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                if (child != null) {
+                    int position = recyclerView.getChildAdapterPosition(child);
+                    TodoUnit todoUnit = mTodoAdapter.getTodoAtPosition(position);
+                    Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE, todoUnit);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, UPDATE_TODO_ACTIVITY_REQUEST_CODE);
+                }
+            }
+        }));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_TODO_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            String todoContent = data.getStringExtra(EditorActivity.EXTRA_TODO_CONTENT);
-            mTodoViewModel.insert(new TodoUnit.Builder()
-                    .setTodoText(todoContent)
-                    .build());
+        switch (requestCode) {
+            case NEW_TODO_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    String todoContent = data.getStringExtra(EditorActivity.EXTRA_TODO_CONTENT);
+                    mTodoViewModel.insert(new TodoUnit.Builder()
+                            .setTodoText(todoContent)
+                            .build());
+                }
+                break;
+            case UPDATE_TODO_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    if (data.getExtras() != null) {
+                        TodoUnit todoUnit = (TodoUnit) data.getExtras().getSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE);
+                        mTodoViewModel.update(todoUnit);
+                    }
+                }
         }
     }
 
