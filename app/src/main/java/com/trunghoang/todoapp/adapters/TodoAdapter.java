@@ -27,6 +27,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         notifyDataSetChanged();
     }
 
+    public TodoUnit getTodoAtPosition(int position) {
+        return mAllTodos.get(position);
+    }
+
     @NonNull
     @Override
     public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -5,14 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.trunghoang.todoapp.adapters.TodoAdapter;
 import com.trunghoang.todoapp.data.TodoUnit;
@@ -33,18 +34,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
-            }
-        });
+        setActionOpenEditor(fab);
 
         RecyclerView recyclerView = findViewById(R.id.main_task_recycler_view);
         final TodoAdapter todoAdapter = new TodoAdapter(this);
         recyclerView.setAdapter(todoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        attachItemTouchHelper(recyclerView);
 
         mTodoViewModel = new TodoViewModel(this.getApplication());
         mTodoViewModel.getAllTodos().observe(this, new Observer<List<TodoUnit>>() {
@@ -53,6 +49,37 @@ public class MainActivity extends AppCompatActivity {
                 todoAdapter.setAllTodos(todoUnits);
             }
         });
+    }
+
+    private void setActionOpenEditor(FloatingActionButton fab) {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
+            }
+        });
+    }
+
+    private void attachItemTouchHelper(final RecyclerView recyclerView) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                TodoUnit todoUnit = ((TodoAdapter) recyclerView.getAdapter())
+                        .getTodoAtPosition(position);
+                Toast.makeText(MainActivity.this, R.string.deleting_todo_alert,
+                        Toast.LENGTH_SHORT).show();
+                mTodoViewModel.delete(todoUnit);
+            }
+        });
+        helper.attachToRecyclerView(recyclerView);
     }
 
     @Override

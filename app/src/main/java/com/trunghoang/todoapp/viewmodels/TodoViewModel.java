@@ -35,4 +35,8 @@ public class TodoViewModel extends AndroidViewModel {
     public void reset() {
         mTodoRepository.reset();
     }
+
+    public void delete(TodoUnit... todoUnits) {
+        mTodoRepository.delete(todoUnits);
+    }
 }

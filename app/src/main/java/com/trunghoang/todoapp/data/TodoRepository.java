@@ -32,6 +32,10 @@ public class TodoRepository {
         new InsertAsync(mTodoDao).execute(todoUnit);
     }
 
+    public void delete(TodoUnit... todoUnits) {
+        new DeleteAsync(mTodoDao).execute(todoUnits);
+    }
+
     private static class DeleteAllAsync extends AsyncTask<Void, Void, Void> {
         TodoDao mTodoDao;
 
@@ -71,6 +75,22 @@ public class TodoRepository {
         @Override
         protected Void doInBackground(TodoUnit... todoUnits) {
             mTodoDao.insert(todoUnits[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteAsync extends AsyncTask<TodoUnit, Void, Void> {
+        TodoDao mTodoDao;
+
+        DeleteAsync(TodoDao mTodoDao) {
+            this.mTodoDao = mTodoDao;
+        }
+
+        @Override
+        protected Void doInBackground(TodoUnit... todoUnits) {
+            for (int i = 0; i < todoUnits.length; i ++) {
+                mTodoDao.delete(todoUnits[i]);
+            }
             return null;
         }
     }
