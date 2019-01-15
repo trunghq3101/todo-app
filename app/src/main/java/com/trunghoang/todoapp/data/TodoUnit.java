@@ -16,7 +16,7 @@ public class TodoUnit {
     private String mTodoText;
 
     @Ignore
-    TodoUnit(@NonNull String mTodoText) {
+    public TodoUnit(@NonNull String mTodoText) {
         this.mTodoText = mTodoText;
     }
 

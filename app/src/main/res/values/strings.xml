@@ -2,4 +2,7 @@
     <string name="app_name">TodoApp</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_reset">Reset</string>
+    <string name="todo_content_hint">Write a todo</string>
+    <string name="todo_save_button">Save</string>
+    <string name="empty_todo_alert">Empty todo can\'t be saved</string>
 </resources>

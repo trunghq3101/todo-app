@@ -1,6 +1,7 @@
 package com.trunghoang.todoapp;
 
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int NEW_TODO_ACTIVITY_REQUEST_CODE = 1;
     private TodoViewModel mTodoViewModel;
 
     @Override
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -51,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
                 todoAdapter.setAllTodos(todoUnits);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_TODO_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            String todoContent = data.getStringExtra(EditorActivity.EXTRA_TODO_CONTENT);
+            mTodoViewModel.insert(new TodoUnit(todoContent));
+        }
     }
 
     @Override

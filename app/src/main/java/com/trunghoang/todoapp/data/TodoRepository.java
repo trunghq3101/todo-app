@@ -28,6 +28,10 @@ public class TodoRepository {
         new ResetAsync(mTodoDao).execute();
     }
 
+    public void insert(TodoUnit todoUnit) {
+        new InsertAsync(mTodoDao).execute(todoUnit);
+    }
+
     private static class DeleteAllAsync extends AsyncTask<Void, Void, Void> {
         TodoDao mTodoDao;
 
@@ -53,6 +57,20 @@ public class TodoRepository {
         protected Void doInBackground(Void... voids) {
             mTodoDao.deleteAll();
             mTodoDao.insert(new TodoUnit("This is a sample todo task"));
+            return null;
+        }
+    }
+
+    private static class InsertAsync extends AsyncTask<TodoUnit, Void, Void> {
+        TodoDao mTodoDao;
+
+        InsertAsync(TodoDao mTodoDao) {
+            this.mTodoDao = mTodoDao;
+        }
+
+        @Override
+        protected Void doInBackground(TodoUnit... todoUnits) {
+            mTodoDao.insert(todoUnits[0]);
             return null;
         }
     }

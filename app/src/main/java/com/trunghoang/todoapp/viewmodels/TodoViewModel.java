@@ -24,6 +24,10 @@ public class TodoViewModel extends AndroidViewModel {
         return mAllTodos;
     }
 
+    public void insert(TodoUnit todoUnit) {
+        mTodoRepository.insert(todoUnit);
+    }
+
     public void deleteAll() {
         mTodoRepository.deleteAll();
     }
