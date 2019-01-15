@@ -23,4 +23,12 @@ public class TodoViewModel extends AndroidViewModel {
     public LiveData<List<TodoUnit>> getAllTodos() {
         return mAllTodos;
     }
+
+    public void deleteAll() {
+        mTodoRepository.deleteAll();
+    }
+
+    public void reset() {
+        mTodoRepository.reset();
+    }
 }

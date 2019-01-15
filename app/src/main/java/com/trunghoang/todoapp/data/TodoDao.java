@@ -15,4 +15,7 @@ public interface TodoDao {
 
     @Insert
     void insert(TodoUnit todoUnit);
+
+    @Query("DELETE FROM todo_table")
+    void deleteAll();
 }
