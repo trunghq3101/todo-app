@@ -18,6 +18,6 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="item_view_style">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/colorSurface</item>
     </style>
 </resources>
