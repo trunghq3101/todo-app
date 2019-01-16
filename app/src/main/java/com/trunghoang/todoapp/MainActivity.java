@@ -24,7 +24,7 @@ import com.trunghoang.todoapp.viewmodels.TodoViewModel;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditorDialogFragment.Listener {
 
     public static final int NEW_TODO_ACTIVITY_REQUEST_CODE = 1;
     public static final int UPDATE_TODO_ACTIVITY_REQUEST_CODE = 2;
@@ -58,11 +58,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setActionOpenEditor(FloatingActionButton fab) {
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+//                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
+//            }
+//        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
+            public void onClick(View v) {
+                EditorDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
             }
         });
     }
@@ -154,5 +160,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveButtonClick(TodoUnit newTodoUnit) {
+        if (newTodoUnit != null) {
+            mTodoViewModel.insert(newTodoUnit);
+        }
     }
 }
