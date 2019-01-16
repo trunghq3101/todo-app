@@ -115,22 +115,19 @@ public class MainActivity extends AppCompatActivity implements EditorDialogFragm
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case NEW_TODO_ACTIVITY_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    String todoContent = data.getStringExtra(EditorActivity.EXTRA_TODO_CONTENT);
-                    mTodoViewModel.insert(new TodoUnit.Builder()
-                            .setTodoText(todoContent)
-                            .build());
+        if (requestCode == UPDATE_TODO_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getExtras() != null) {
+                TodoUnit todoUnit = (TodoUnit) data.getExtras().getSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE);
+                boolean isDeleting = data.getExtras().getBoolean(Constants.EXTRA_DELETE_REQUEST);
+                if (isDeleting) {
+                    mTodoViewModel.delete(todoUnit);
+                } else {
+                    mTodoViewModel.update(todoUnit);
                 }
-                break;
-            case UPDATE_TODO_ACTIVITY_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    if (data.getExtras() != null) {
-                        TodoUnit todoUnit = (TodoUnit) data.getExtras().getSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE);
-                        mTodoViewModel.update(todoUnit);
-                    }
-                }
+            } else {
+                Toast.makeText(this, R.string.something_wrong, Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
     }
 

@@ -24,6 +24,7 @@
     <style name="AppTheme.ItemView">
         <item name="android:background">@color/colorSurface</item>
         <item name="android:textColor">@color/colorTextOnSecondary</item>
+        <item name="android:textSize">@dimen/list_item_text</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">

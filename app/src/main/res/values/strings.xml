@@ -6,4 +6,6 @@
     <string name="todo_save_button">Save</string>
     <string name="empty_todo_alert">Empty todo can\'t be saved</string>
     <string name="deleting_todo_alert">Deleting a todo</string>
+    <string name="something_wrong">Something wrong</string>
+    <string name="delete_todo">Delete</string>
 </resources>
