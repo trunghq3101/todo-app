@@ -16,7 +16,9 @@ public class DatePickerFragment extends DialogFragment {
     public static DatePickerFragment newInstance(Long timeInMillis) {
         DatePickerFragment instance = new DatePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(Constants.EXTRA_TIMEINMILLIS, timeInMillis);
+        if (timeInMillis != null) {
+            bundle.putLong(Constants.EXTRA_TIMEINMILLIS, timeInMillis);
+        }
         instance.setArguments(bundle);
         return instance;
     }
@@ -25,11 +27,8 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
-        if (getArguments() != null) {
-            long timeInMillis = getArguments().getLong(Constants.EXTRA_TIMEINMILLIS);
-            if ( timeInMillis != 0) {
-                c.setTimeInMillis(timeInMillis);
-            }
+        if (getArguments() != null && getArguments().containsKey(Constants.EXTRA_TIMEINMILLIS)) {
+            c.setTimeInMillis(getArguments().getLong(Constants.EXTRA_TIMEINMILLIS));
         }
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);

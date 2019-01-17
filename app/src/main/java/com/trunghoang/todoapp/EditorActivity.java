@@ -15,9 +15,11 @@ import android.widget.TextView;
 
 import com.trunghoang.todoapp.data.TodoUnit;
 import com.trunghoang.todoapp.utilities.Constants;
+import com.trunghoang.todoapp.utilities.Converters;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class EditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -26,7 +28,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
     private TextView mDeadlineInputView;
     private TodoUnit mTodoUnit;
     private boolean mIsDeleting = false;
-    private long mDeadlineInMillis = 0L;
+    private Long mDeadlineInMillis;
     private String mDeadlineString;
 
     @Override
@@ -44,7 +46,6 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
 
         mContentInput = findViewById(R.id.todo_content_input);
         mDeadlineInputView = findViewById(R.id.todo_deadline_input);
-        mDeadlineString = mDeadlineInputView.getText().toString();
         mDeadlineInputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,17 +65,25 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putLong(Constants.EXTRA_TIMEINMILLIS, mDeadlineInMillis);
-        outState.putString(Constants.EXTRA_DEADLINE_STRING, mDeadlineString);
         super.onSaveInstanceState(outState);
+        if (mDeadlineInMillis != null) {
+            outState.putLong(Constants.EXTRA_TIMEINMILLIS, mDeadlineInMillis);
+        }
+        if (mDeadlineString != null) {
+            outState.putString(Constants.EXTRA_DEADLINE_STRING, mDeadlineString);
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mDeadlineInMillis = savedInstanceState.getLong(Constants.EXTRA_TIMEINMILLIS);
-        mDeadlineString = savedInstanceState.getString(Constants.EXTRA_DEADLINE_STRING);
-        mDeadlineInputView.setText(mDeadlineString);
+        if (savedInstanceState.containsKey(Constants.EXTRA_TIMEINMILLIS)) {
+            mDeadlineInMillis = savedInstanceState.getLong(Constants.EXTRA_TIMEINMILLIS);
+        }
+        if (savedInstanceState.containsKey(Constants.EXTRA_DEADLINE_STRING)) {
+            mDeadlineString = savedInstanceState.getString(Constants.EXTRA_DEADLINE_STRING);
+            mDeadlineInputView.setText(mDeadlineString);
+        }
     }
 
     @Override
@@ -85,13 +94,21 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
 
     private void populateTodoView(TodoUnit todoUnit) {
         mContentInput.setText(todoUnit.getTodoText());
+        if (todoUnit.getTodoDeadline() != null) {
+            mDeadlineInputView.setText(stringFromDate(todoUnit.getTodoDeadline()));
+            mDeadlineInMillis = Converters.dateToTimestamp(todoUnit.getTodoDeadline());
+        }
     }
 
     private TodoUnit populatedTodoUnit(@NonNull TodoUnit todoUnit) {
-        return new TodoUnit.Builder()
-                .setTodoId(todoUnit.getId())
-                .setTodoText(mContentInput.getText().toString())
-                .build();
+
+        TodoUnit.Builder builder = new TodoUnit.Builder();
+        builder.setTodoId(todoUnit.getId());
+        if (mDeadlineInMillis != null) {
+            builder.setTodoDeadline(Converters.fromTimestamp(mDeadlineInMillis));
+        }
+        builder.setTodoText(mContentInput.getText().toString());
+        return builder.build();
     }
 
     @Override
@@ -130,8 +147,12 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
         Calendar c = Calendar.getInstance();
         c.set(year, month, dayOfMonth);
         mDeadlineInMillis = c.getTimeInMillis();
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy", Locale.US);
-        mDeadlineString = formatter.format(c.getTime());
+        mDeadlineString = stringFromDate(c.getTime());
         mDeadlineInputView.setText(mDeadlineString);
+    }
+
+    private String stringFromDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy", Locale.US);
+        return formatter.format(date);
     }
 }
