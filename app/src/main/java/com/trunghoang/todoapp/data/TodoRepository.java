@@ -64,7 +64,9 @@ public class TodoRepository {
         @Override
         protected Void doInBackground(Void... voids) {
             mTodoDao.deleteAll();
-            mTodoDao.insert(new TodoUnit("This is a sample todo task"));
+            mTodoDao.insert(new TodoUnit.Builder()
+                    .setTodoText("This is a sample todo task")
+                    .build());
             return null;
         }
     }
@@ -92,7 +94,7 @@ public class TodoRepository {
 
         @Override
         protected Void doInBackground(TodoUnit... todoUnits) {
-            for (int i = 0; i < todoUnits.length; i ++) {
+            for (int i = 0; i < todoUnits.length; i++) {
                 mTodoDao.delete(todoUnits[i]);
             }
             return null;

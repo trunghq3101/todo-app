@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity(tableName = "todo_table")
 public class TodoUnit implements Serializable {
@@ -17,14 +18,19 @@ public class TodoUnit implements Serializable {
     @ColumnInfo(name = "todo_text")
     private String mTodoText;
 
+    @ColumnInfo(name = "todo_deadline")
+    private Date mTodoDeadline;
+
     @Ignore
-    public TodoUnit(@NonNull String mTodoText) {
+    public TodoUnit(@NonNull String mTodoText, Date mTodoDeadline) {
         this.mTodoText = mTodoText;
+        this.mTodoDeadline = mTodoDeadline;
     }
 
-    public TodoUnit(int id, @NonNull String mTodoText) {
+    public TodoUnit(int id, @NonNull String mTodoText, Date mTodoDeadline) {
         this.id = id;
         this.mTodoText = mTodoText;
+        this.mTodoDeadline = mTodoDeadline;
     }
 
     public String getTodoText() {
@@ -35,9 +41,14 @@ public class TodoUnit implements Serializable {
         return id;
     }
 
+    public Date getTodoDeadline() {
+        return mTodoDeadline;
+    }
+
     public static class Builder {
         private int id;
         private String mTodoText;
+        private Date mTodoDeadline;
 
         public Builder() {}
 
@@ -51,8 +62,13 @@ public class TodoUnit implements Serializable {
             return this;
         }
 
+        public Builder setTodoDeadline(Date mTodoDeadline) {
+            this.mTodoDeadline = mTodoDeadline;
+            return this;
+        }
+
         public TodoUnit build() {
-            return new TodoUnit(id, mTodoText);
+            return new TodoUnit(id, mTodoText, mTodoDeadline);
         }
     }
 }

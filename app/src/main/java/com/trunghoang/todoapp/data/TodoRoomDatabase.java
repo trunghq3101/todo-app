@@ -4,11 +4,15 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-@Database(entities = {TodoUnit.class}, version = 2, exportSchema = false)
+import com.trunghoang.todoapp.utilities.Converters;
+
+@Database(entities = {TodoUnit.class}, version = 3, exportSchema = false)
+@TypeConverters({Converters.class})
 abstract class TodoRoomDatabase extends RoomDatabase {
 
     abstract TodoDao todoDao();

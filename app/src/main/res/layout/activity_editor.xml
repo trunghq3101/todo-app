@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditorActivity"
-    android:theme="@style/AppTheme.NoActionBar">
+    android:theme="@style/AppTheme.EditorScreen">
 
     <include
         android:id="@+id/toolbar_container"
@@ -18,13 +18,14 @@
 
     <EditText
         android:id="@+id/todo_content_input"
+        style="@style/TextLargeStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:ems="10"
         android:hint="@string/todo_content_hint"
         android:inputType="textMultiLine"
@@ -32,5 +33,30 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_container" />
+
+    <TextView
+        android:id="@+id/todo_deadline_input"
+        style="@style/TextHinterStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:clickable="true"
+        android:ems="10"
+        android:focusable="true"
+        android:text="@string/date_hint"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/todo_content_input"
+        tools:text="12/01/2018" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/todo_content_input"
+        app:layout_constraintTop_toBottomOf="@+id/todo_content_input"
+        app:srcCompat="@drawable/ic_today_black_24dp" />
 
 </android.support.constraint.ConstraintLayout>

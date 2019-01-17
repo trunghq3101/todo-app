@@ -1,23 +1,32 @@
 package com.trunghoang.todoapp;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.trunghoang.todoapp.data.TodoUnit;
 import com.trunghoang.todoapp.utilities.Constants;
 
-public class EditorActivity extends AppCompatActivity {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+public class EditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private EditText mContentInput;
+    private TextView mDeadlineInputView;
     private TodoUnit mTodoUnit;
     private boolean mIsDeleting = false;
 
@@ -35,6 +44,14 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         mContentInput = findViewById(R.id.todo_content_input);
+        mDeadlineInputView = findViewById(R.id.todo_deadline_input);
+        mDeadlineInputView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerFragment.newInstance()
+                        .show(getSupportFragmentManager(), "datePicker");
+            }
+        });
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
@@ -91,5 +108,15 @@ public class EditorActivity extends AppCompatActivity {
         }
         if (mIsDeleting) intent.putExtra(Constants.EXTRA_DELETE_REQUEST, true);
         setResult(RESULT_OK, intent);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, dayOfMonth);
+        Date date = c.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy", Locale.US);
+        String dateString = formatter.format(date);
+        mDeadlineInputView.setText(dateString);
     }
 }
