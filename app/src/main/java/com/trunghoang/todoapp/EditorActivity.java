@@ -2,9 +2,9 @@ package com.trunghoang.todoapp;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,11 +16,8 @@ import android.widget.TextView;
 import com.trunghoang.todoapp.data.TodoUnit;
 import com.trunghoang.todoapp.utilities.Constants;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class EditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -29,6 +26,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
     private TextView mDeadlineInputView;
     private TodoUnit mTodoUnit;
     private boolean mIsDeleting = false;
+    private long mDeadlineInMillis = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +46,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
         mDeadlineInputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerFragment.newInstance()
+                DatePickerFragment.newInstance(mDeadlineInMillis)
                         .show(getSupportFragmentManager(), "datePicker");
             }
         });
@@ -110,13 +108,14 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
         setResult(RESULT_OK, intent);
     }
 
+    //TODO: keep date on config changes
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
         c.set(year, month, dayOfMonth);
-        Date date = c.getTime();
+        mDeadlineInMillis = c.getTimeInMillis();
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy", Locale.US);
-        String dateString = formatter.format(date);
+        String dateString = formatter.format(c.getTime());
         mDeadlineInputView.setText(dateString);
     }
 }
