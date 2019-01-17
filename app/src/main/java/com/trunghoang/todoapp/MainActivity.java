@@ -6,20 +6,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.trunghoang.todoapp.adapters.TodoAdapter;
 import com.trunghoang.todoapp.adapters.TodoClickListener;
 import com.trunghoang.todoapp.data.TodoUnit;
 import com.trunghoang.todoapp.utilities.Constants;
+import com.trunghoang.todoapp.utilities.ViewUtils;
 import com.trunghoang.todoapp.viewmodels.TodoViewModel;
 
 import java.util.List;
@@ -100,13 +102,20 @@ public class MainActivity extends AppCompatActivity implements EditorDialogFragm
             public void onSingleTapUp(MotionEvent e) {
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null) {
+                    View underChild = ViewUtils.findChildViewAt(child, e.getX(), e.getY());
                     int position = recyclerView.getChildAdapterPosition(child);
                     TodoUnit todoUnit = mTodoAdapter.getTodoAtPosition(position);
-                    Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE, todoUnit);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, UPDATE_TODO_ACTIVITY_REQUEST_CODE);
+
+                    if (underChild instanceof AppCompatCheckBox) {
+                        todoUnit.setTodoDone(!todoUnit.getTodoDone());
+                        mTodoViewModel.update(todoUnit);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE, todoUnit);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, UPDATE_TODO_ACTIVITY_REQUEST_CODE);
+                    }
                 }
             }
         }));

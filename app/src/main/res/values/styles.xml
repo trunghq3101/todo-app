@@ -28,7 +28,6 @@
     </style>
 
     <style name="AppTheme.ItemView">
-        <item name="android:background">@color/colorSurface</item>
         <item name="android:textColor">@color/colorTextOnSecondary</item>
         <item name="android:textSize">@dimen/list_item_text</item>
     </style>
@@ -44,6 +43,11 @@
 
     <style name="TextLargeStyle">
         <item name="android:textSize">@dimen/text_large</item>
+    </style>
+
+    <style name="ItemContainerStyle">
+        <item name="android:background">@drawable/bg_item_view</item>
+        <item name="android:padding">@dimen/list_item_spacing</item>
     </style>
 
 </resources>

@@ -21,16 +21,21 @@ public class TodoUnit implements Serializable {
     @ColumnInfo(name = "todo_deadline")
     private Date mTodoDeadline;
 
+    @ColumnInfo(name = "todo_done")
+    private boolean mTodoDone;
+
     @Ignore
-    public TodoUnit(@NonNull String mTodoText, Date mTodoDeadline) {
+    public TodoUnit(@NonNull String mTodoText, Date mTodoDeadline, boolean mTodoDone) {
         this.mTodoText = mTodoText;
         this.mTodoDeadline = mTodoDeadline;
+        this.mTodoDone = mTodoDone;
     }
 
-    public TodoUnit(int id, @NonNull String mTodoText, Date mTodoDeadline) {
+    public TodoUnit(int id, @NonNull String mTodoText, Date mTodoDeadline, boolean mTodoDone) {
         this.id = id;
         this.mTodoText = mTodoText;
         this.mTodoDeadline = mTodoDeadline;
+        this.mTodoDone = mTodoDone;
     }
 
     public String getTodoText() {
@@ -45,10 +50,15 @@ public class TodoUnit implements Serializable {
         return mTodoDeadline;
     }
 
+    public boolean getTodoDone() { return mTodoDone; }
+
+    public void setTodoDone(boolean done) { mTodoDone = done; }
+
     public static class Builder {
         private int id;
         private String mTodoText;
         private Date mTodoDeadline;
+        private boolean mTodoDone;
 
         public Builder() {}
 
@@ -67,8 +77,13 @@ public class TodoUnit implements Serializable {
             return this;
         }
 
+        public Builder setTodoDone(boolean mTodoDone) {
+            this.mTodoDone = mTodoDone;
+            return this;
+        }
+
         public TodoUnit build() {
-            return new TodoUnit(id, mTodoText, mTodoDeadline);
+            return new TodoUnit(id, mTodoText, mTodoDeadline, mTodoDone);
         }
     }
 }

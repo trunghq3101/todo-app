@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 
 import com.trunghoang.todoapp.utilities.Converters;
 
-@Database(entities = {TodoUnit.class}, version = 3, exportSchema = false)
+@Database(entities = {TodoUnit.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract class TodoRoomDatabase extends RoomDatabase {
 

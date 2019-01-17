@@ -108,6 +108,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
             builder.setTodoDeadline(Converters.fromTimestamp(mDeadlineInMillis));
         }
         builder.setTodoText(mContentInput.getText().toString());
+        builder.setTodoDone(todoUnit.getTodoDone());
         return builder.build();
     }
 

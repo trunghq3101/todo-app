@@ -2,6 +2,7 @@ package com.trunghoang.todoapp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         if (mAllTodos != null) {
             TodoUnit todoUnit = mAllTodos.get(position);
             holder.todoTextView.setText(todoUnit.getTodoText());
+            holder.todoCheckBox.setChecked(todoUnit.getTodoDone());
         }
     }
 
@@ -55,10 +57,12 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
 
     class TodoViewHolder extends RecyclerView.ViewHolder {
         private TextView todoTextView;
+        private AppCompatCheckBox todoCheckBox;
 
         TodoViewHolder(View itemView) {
             super(itemView);
             todoTextView = itemView.findViewById(R.id.item_text);
+            todoCheckBox = itemView.findViewById(R.id.item_check);
         }
     }
 }
