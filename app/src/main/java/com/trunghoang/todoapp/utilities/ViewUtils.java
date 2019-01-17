@@ -10,8 +10,8 @@ public class ViewUtils {
             final int count = v.getChildCount();
             for (int i = count - 1; i >= 0; i--) {
                 final View child = v.getChildAt(i);
-                final float translationX = child.getTranslationX();
-                final float translationY = child.getTranslationY();
+                final float translationX = child.getTranslationX() + parent.getLeft();
+                final float translationY = child.getTranslationY() + parent.getTop();
                 if (x >= child.getLeft() + translationX
                         && x <= child.getRight() + translationX
                         && y >= child.getTop() + translationY
