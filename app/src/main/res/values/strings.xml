@@ -9,4 +9,5 @@
     <string name="something_wrong">Something wrong</string>
     <string name="delete_todo">Delete</string>
     <string name="date_hint">Date</string>
+    <string name="title_completed_section">Completed</string>
 </resources>

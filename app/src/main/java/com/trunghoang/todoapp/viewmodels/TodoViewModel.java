@@ -12,16 +12,22 @@ import java.util.List;
 
 public class TodoViewModel extends AndroidViewModel {
     private TodoRepository mTodoRepository;
-    LiveData<List<TodoUnit>> mAllTodos;
+    private LiveData<List<TodoUnit>> mAllTodos;
+    private LiveData<List<TodoUnit>> mDoneTodos;
 
     public TodoViewModel(@NonNull Application application) {
         super(application);
         mTodoRepository = new TodoRepository(application);
         mAllTodos = mTodoRepository.getAllTodos();
+        mDoneTodos = mTodoRepository.getDoneTodos();
     }
 
     public LiveData<List<TodoUnit>> getAllTodos() {
         return mAllTodos;
+    }
+
+    public LiveData<List<TodoUnit>> getDoneTodos() {
+        return mDoneTodos;
     }
 
     public void insert(TodoUnit todoUnit) {

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trunghoang.todoapp.adapters.TodoAdapter;
@@ -28,10 +29,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements EditorDialogFragment.Listener {
 
-    public static final int NEW_TODO_ACTIVITY_REQUEST_CODE = 1;
     public static final int UPDATE_TODO_ACTIVITY_REQUEST_CODE = 2;
     private TodoViewModel mTodoViewModel;
-    private TodoAdapter mTodoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,30 +42,53 @@ public class MainActivity extends AppCompatActivity implements EditorDialogFragm
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         setActionOpenEditor(fab);
 
-        RecyclerView recyclerView = findViewById(R.id.main_task_recycler_view);
-        mTodoAdapter = new TodoAdapter(this);
-        recyclerView.setAdapter(mTodoAdapter);
+        final RecyclerView recyclerView = findViewById(R.id.main_task_recycler_view);
+        final TodoAdapter newTodoAdapter = new TodoAdapter(this);
+        recyclerView.setAdapter(newTodoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         attachItemTouchHelper(recyclerView);
         attachItemTouchListener(recyclerView);
+
+        final RecyclerView completedRecyclerView = findViewById(R.id.completed_items);
+        final TodoAdapter completedTodoAdapter = new TodoAdapter(this);
+        completedRecyclerView.setAdapter(completedTodoAdapter);
+        completedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        attachItemTouchHelper(completedRecyclerView);
+        attachItemTouchListener(completedRecyclerView);
+
+        final View completedSectionToggle = findViewById(R.id.completed_title_container);
+        final TextView completedSectionTitle = completedSectionToggle.findViewById(R.id.title_completed_section);
+        completedSectionToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (completedRecyclerView.getVisibility() == View.GONE) {
+                    completedRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    completedRecyclerView.setVisibility(View.GONE);
+                }
+            }
+        });
 
         mTodoViewModel = new TodoViewModel(this.getApplication());
         mTodoViewModel.getAllTodos().observe(this, new Observer<List<TodoUnit>>() {
             @Override
             public void onChanged(@Nullable List<TodoUnit> todoUnits) {
-                mTodoAdapter.setAllTodos(todoUnits);
+                newTodoAdapter.setAllTodos(todoUnits);
+            }
+        });
+        mTodoViewModel.getDoneTodos().observe(this, new Observer<List<TodoUnit>>() {
+            @Override
+            public void onChanged(@Nullable List<TodoUnit> todoUnits) {
+                completedTodoAdapter.setAllTodos(todoUnits);
+                int numTodos = 0;
+                if (todoUnits != null) numTodos = todoUnits.size();
+                String title = "Completed (" + numTodos + ")";
+                completedSectionTitle.setText(title);
             }
         });
     }
 
     private void setActionOpenEditor(FloatingActionButton fab) {
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-//                startActivityForResult(intent, NEW_TODO_ACTIVITY_REQUEST_CODE);
-//            }
-//        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements EditorDialogFragm
                 if (child != null) {
                     View underChild = ViewUtils.findChildViewAt(child, e.getX(), e.getY());
                     int position = recyclerView.getChildAdapterPosition(child);
-                    TodoUnit todoUnit = mTodoAdapter.getTodoAtPosition(position);
+                    TodoUnit todoUnit = ((TodoAdapter) recyclerView.getAdapter()).getTodoAtPosition(position);
 
                     if (underChild instanceof AppCompatCheckBox) {
                         todoUnit.setTodoDone(!todoUnit.getTodoDone());

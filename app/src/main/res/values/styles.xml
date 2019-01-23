@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorTextOnSecondary</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -50,4 +51,10 @@
         <item name="android:padding">@dimen/list_item_spacing</item>
     </style>
 
+    <style name="CompletedSectionTitleStyle">
+        <item name="android:padding">@dimen/list_item_spacing_half</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/list_item_text</item>
+    </style>
 </resources>

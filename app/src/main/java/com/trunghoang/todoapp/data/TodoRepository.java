@@ -9,15 +9,21 @@ import java.util.List;
 public class TodoRepository {
     private TodoDao mTodoDao;
     private LiveData<List<TodoUnit>> mAllTodos;
+    private LiveData<List<TodoUnit>> mDoneTodos;
 
     public TodoRepository(Application application) {
         TodoRoomDatabase db = TodoRoomDatabase.getDatabase(application);
         mTodoDao = db.todoDao();
         mAllTodos = mTodoDao.getAllTodos();
+        mDoneTodos = mTodoDao.getDoneTodos();
     }
 
     public LiveData<List<TodoUnit>> getAllTodos() {
         return mAllTodos;
+    }
+
+    public LiveData<List<TodoUnit>> getDoneTodos() {
+        return mDoneTodos;
     }
 
     public void deleteAll() {

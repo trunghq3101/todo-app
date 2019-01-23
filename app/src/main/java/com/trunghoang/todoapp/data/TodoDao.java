@@ -12,8 +12,11 @@ import java.util.List;
 @Dao
 public interface TodoDao {
 
-    @Query("SELECT * FROM todo_table")
+    @Query("SELECT * FROM todo_table WHERE todo_done = 0")
     LiveData<List<TodoUnit>> getAllTodos();
+
+    @Query("SELECT * FROM todo_table WHERE todo_done = 1")
+    LiveData<List<TodoUnit>> getDoneTodos();
 
     @Insert
     void insert(TodoUnit todoUnit);

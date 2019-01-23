@@ -16,8 +16,8 @@ import java.util.List;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder> {
 
-    private List<TodoUnit> mAllTodos;
-    private final LayoutInflater mINFLATER;
+    List<TodoUnit> mAllTodos;
+    final LayoutInflater mINFLATER;
 
     public TodoAdapter(Context context) {
         this.mINFLATER = LayoutInflater.from(context);

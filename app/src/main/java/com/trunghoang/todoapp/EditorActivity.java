@@ -114,12 +114,9 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
         if (item.getItemId() == R.id.delete) {
             mIsDeleting = true;
+            saveTodo(new Intent());
             finish();
             return true;
         }
@@ -127,13 +124,18 @@ public class EditorActivity extends AppCompatActivity implements DatePickerDialo
     }
 
     @Override
-    public void finish() {
-        saveTodo();
-        super.finish();
+    public void supportNavigateUpTo(@NonNull Intent upIntent) {
+        saveTodo(upIntent);
+        super.supportNavigateUpTo(upIntent);
     }
 
-    public void saveTodo() {
-        Intent intent = new Intent();
+    @Override
+    public void onBackPressed() {
+        saveTodo(new Intent());
+        super.onBackPressed();
+    }
+
+    public void saveTodo(Intent intent) {
         if (mTodoUnit != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.EXTRA_TODO_UNIT_BUNDLE, populatedTodoUnit(mTodoUnit));
